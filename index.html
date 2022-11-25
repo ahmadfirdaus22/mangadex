@@ -21,6 +21,7 @@
         .mytitle{
             border-radius:10px;
             background-color: aqua;
+            text-align: center  ;
         }
         .b{
             margin-top: -3%;
@@ -33,6 +34,9 @@
             resize: none;
         }
         .navaku{
+            padding-top: 0.5%;
+            padding-bottom: 0.5%;
+            text-align: center;
 
         }
         @media(max-width: 768px) {
@@ -44,7 +48,7 @@
     </style>
 </head>
 <body>
-    <div class="navaku">
+    <div class="navaku bg-info">
             <input type="text" id="search">
             <button onclick="search()">search</button>
             <button onclick="back()" style="visibility: hidden;" id="back">Kembali</button>
@@ -135,15 +139,12 @@
             for(let i=0; i<mangadata.length; i++){
                 for(let a=0; a<mangadata[i].relationships.length; a++){
                     if(mangadata[i].relationships[a].type == "cover_art"){
-                        hasil += "<div class='card col-md-3 a'><p class='mytitle'><b>Title: "+mangadata[i].attributes.title.en+"</b></p><img class='card-img' width='200' height='220' src='"+ img + mangadata[i].id+"/"+ mangadata[i].relationships[a].attributes.fileName+"'><br><textarea class='area'>"+mangadata[i].attributes.description.en+"</textarea></div>";
+                        hasil += "<div class='card col-md-3 a'><p class='mytitle'><b>"+mangadata[i].attributes.title.en+"</b></p><img class='card-img' width='200' height='220' src='"+ img + mangadata[i].id+"/"+ mangadata[i].relationships[a].attributes.fileName+"'><br><textarea class='area'>"+mangadata[i].attributes.description.en+"</textarea></div>";
                         }               
                     }
                 }
             tempat.innerHTML = hasil;
             
-            // if( == null){
-            //     alert("Not Found")
-            // }
         }
 
       
