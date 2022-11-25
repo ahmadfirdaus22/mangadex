@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <style>
+        /* .cus{
+            height: 30vw;
+        } */
+        body{
+            background-color: black;
+        }
+        .a{
+            margin-left: 7%;
+            margin-top: 3%;
+            padding: 0%;
+        }
+        .mytitle{
+            border-radius:10px;
+            background-color: aqua;
+        }
+        .b{
+            margin-top: -3%;
+        }
+        #number{
+            width: 4%;
+        }
+        .area{
+            height: 100px;
+            resize: none;
+        }
+        .navaku{
+
+        }
+        @media(max-width: 768px) {
+            .a{
+                margin-left: 0%;
+                margin-top: 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navaku">
+            <input type="text" id="search">
+            <button onclick="search()">search</button>
+            <button onclick="back()" style="visibility: hidden;" id="back">Kembali</button>
+    </div>
+    <div class="fixed-bottom bg-info" style="text-align: center; margin-top: 0;">
+        <br>
+        <button id="prev" style="margin-right: 1%;" class="btn btn-light" onclick="kurang();">Prev</button>
+        <input  type="number" onchange="func()" id="number" value="6" min="1" style="margin-right: 1%;">
+        <button id="next" class="btn btn-light" onclick="tambah();">Next <br></button> 
+    </div>
+    <div class="container-fluid b">
+        <br>
+        <div id="tes" class="row">
+        </div> 
+    </div>
+    <br><br><br>
+    <script>
+        // class link{
+
+        // }
+        // let answer = document.getElementById("search").value;
+        let c=1;
+        let x = document.getElementById("number").value;
+        let h = JSON.parse(x);
+        getdata("https://api.mangadex.org/manga?limit="+x+"&offset="+c+"&includes[]=cover_art&contentRating[]=safe&title=")
+
+        
+
+        function func(){
+            let x = document.getElementById("number").value;
+            let answer = document.getElementById("search").value;
+            getdata("https://api.mangadex.org/manga?limit="+x+"&offset="+1+"&includes[]=cover_art&contentRating[]=safe&title="+answer)
+        }
+
+
+        function tambah(){
+            let answer = document.getElementById("search").value;
+            var x = document.getElementById("number").value;
+            let h = JSON.parse(x);
+            c +=h;
+            getdata("https://api.mangadex.org/manga?limit="+x+"&offset="+c+"&includes[]=cover_art&contentRating[]=safe&title="+answer)
+
+        }
+
+    
+        function kurang()
+        {
+            let answer = document.getElementById("search").value;
+            var x = document.getElementById("number").value;
+            let h = JSON.parse(x);
+            c-=h;
+            if(c <1){
+                alert("MELEWATI BATAS HALAMAN");
+                c+=h;
+            }
+            else{
+                getdata("https://api.mangadex.org/manga?limit="+x+"&offset="+c+"&includes[]=cover_art&contentRating[]=safe&title="+answer)
+            }
+        }
+
+        function search(){
+                let answer = document.getElementById("search").value;
+                c=1;
+                getdata("https://api.mangadex.org/manga?limit="+x+"&offset="+c+"&includes[]=cover_art&contentRating[]=safe&title="+answer)
+                document.getElementById("back").style.visibility="visible";
+                return answer;
+            }
+        
+        function back(){
+            document.getElementById("back").style.visibility="hidden";
+            getdata("https://api.mangadex.org/manga?limit="+x+"&offset="+c+"&includes[]=cover_art&contentRating[]=safe&title=")
+        }
+            
+        async function getdata(file){
+            let mangadata
+
+            await fetch(file).then((response)=>{
+                return response.json();
+            }).then((data)=>{
+                mangadata = data.data;
+            })
+            let tempat =  document.getElementById("tes");
+            let hasil = '';
+            let no =1;
+            let img = "https://uploads.mangadex.org/covers/"
+
+
+            for(let i=0; i<mangadata.length; i++){
+                for(let a=0; a<mangadata[i].relationships.length; a++){
+                    if(mangadata[i].relationships[a].type == "cover_art"){
+                        hasil += "<div class='card col-md-3 a'><p class='mytitle'><b>Title: "+mangadata[i].attributes.title.en+"</b></p><img class='card-img' width='200' height='220' src='"+ img + mangadata[i].id+"/"+ mangadata[i].relationships[a].attributes.fileName+"'><br><textarea class='area'>"+mangadata[i].attributes.description.en+"</textarea></div>";
+                        }               
+                    }
+                }
+            tempat.innerHTML = hasil;
+            
+            // if( == null){
+            //     alert("Not Found")
+            // }
+        }
+
+      
+    
+    </script>
+</body>
+</html>
